@@ -15,4 +15,6 @@ Then run:
 
 ### Missing edge cases
 
-There is also unhandled edge cases, such as when the input contains `1/15` for any given parameter except `day_of_month`.
+There is also unhandled edge cases, such as:
+* when the input contains `1/15` for any given parameter except `day_of_month`.  
+* Data that uses letters e.g. `MON-FRI` or `JAN-DEC`.
