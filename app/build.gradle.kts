@@ -27,16 +27,10 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
     // This dependency is used by the application.
-    implementation("com.google.guava:guava:29.0-jre")
     implementation("org.junit.jupiter:junit-jupiter:5.4.2")
-
-    // Use the Kotlin test library.
-    testImplementation("org.jetbrains.kotlin:kotlin-test")
-    // Use the Kotlin JUnit integration.
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 }
 
 application {
     // Define the main class for the application.
-    mainClass.set("cron.parser.AppKt")
+    mainClass.set("cron.MainKt")
 }
