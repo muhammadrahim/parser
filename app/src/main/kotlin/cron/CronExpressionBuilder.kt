@@ -26,7 +26,11 @@ object CronExpressionBuilder {
         period.length <= 2 -> setOf(Integer.parseInt(period))
         period.contains("-") -> generateFromRange(period, interval)
         period.contains(",") -> generateFromSet(period, interval)
-        period.contains("/") -> checkForStepSizes(interval.range.toSet(), period, interval) // TODO: potentially need to mod this
+        period.contains("/") -> checkForStepSizes(
+            interval.range.toSet(),
+            period,
+            interval
+        ) // TODO: potentially need to mod this
         else -> throw IllegalStateException("cannot parse. period=$period interval=$interval")
     }
 
@@ -50,8 +54,31 @@ object CronExpressionBuilder {
 
     private fun generateFromRange(period: String, interval: Interval): Set<Int> {
         val bounds = period.split("-")
-        val start = Integer.parseInt(bounds[0])
-        val endInclusive = Integer.parseInt(bounds[1])
-        return checkForStepSizes(IntRange(start, endInclusive).toSet(), period, interval)
+        val start: Int
+        val endInclusive: Int
+        if (period.length <= 6) {
+            start = Integer.parseInt(bounds[0])
+            endInclusive = Integer.parseInt(bounds[1])
+        } else {
+            start = DayOfWeek.valueOf(bounds[0]).value
+            endInclusive = DayOfWeek.valueOf(bounds[1]).value
+        }
+        // start = 5, end = 3. 1-12. ---- 5,6,7,8,9,10,11,12.  1,2,3.
+        val range = if (start > endInclusive) {
+            IntRange(interval.range.first, endInclusive).plus(IntRange(start, interval.range.last)).toSet()
+        } else {
+            IntRange(start, endInclusive).toSet()
+        }
+        val test = OnClick { Integer.parseInt(it) }
+        test.accept("100")
+        return checkForStepSizes(range, period, interval)
     }
+}
+
+enum class DayOfWeek(val value: Int) {
+    MON(1), TUE(2), WED(3), THU(4), FRI(5), SAT(6), SUN(7)
+}
+
+fun interface OnClick {
+    fun accept(string: String): Int
 }
